@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/first_fragment">
+
+    <fragment
+        android:id="@+id/first_fragment"
+        android:name="com.herry.nestednavigation.app.first.FirstFragment"
+        tools:layout="@layout/first_fragment">
+        <action
+            android:id="@+id/action_first_fragment_to_second_fragment"
+            app:destination="@id/second_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/second_fragment"
+        android:name="com.herry.nestednavigation.app.second.SecondFragment"
+        tools:layout="@layout/second_fragment">
+
+        <action
+            android:id="@+id/action_second_fragment_to_third_fragment"
+            app:destination="@id/third_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/third_fragment"
+        android:name="com.herry.nestednavigation.app.third.ThirdFragment"
+        tools:layout="@layout/third_fragment" />
+
+</navigation>

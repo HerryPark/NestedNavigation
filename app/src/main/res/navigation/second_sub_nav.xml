@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onboarding_nav_graph"
+    app:startDestination="@id/second_sub1_fragment">
+
+    <fragment
+        android:id="@+id/second_sub1_fragment"
+        android:name="com.herry.nestednavigation.app.second.sub1.SecondSub1Fragment"
+        tools:layout="@layout/second_sub1_fragment">
+        <action
+            android:id="@+id/action_second_sub1_fragment_to_second_sub2_fragment"
+            app:destination="@id/second_sub2_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/second_sub2_fragment"
+        android:name="com.herry.nestednavigation.app.second.sub2.SecondSub2Fragment"
+        tools:layout="@layout/second_sub2_fragment" />
+</navigation>
