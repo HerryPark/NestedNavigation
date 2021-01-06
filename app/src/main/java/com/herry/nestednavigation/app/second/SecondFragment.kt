@@ -1,12 +1,17 @@
 package com.herry.nestednavigation.app.second
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.herry.nestednavigation.R
 import com.herry.nestednavigation.databinding.SecondFragmentBinding
+import com.herry.nestednavigation.ext.setNavNestedFragmentResultListener
 
 class SecondFragment : Fragment() {
 
@@ -44,7 +49,21 @@ class SecondFragment : Fragment() {
         return binding.root
     }
 
-    fun onClickThirdInSub() {
-        viewModel.onClickThirdInSub(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setNavNestedFragmentResultListener((R.id.second_sub_nav).toString()) { _, bundle ->
+            Log.d("Herry", "from = ${bundle.getInt("from")}")
+            when(bundle.getInt("from")) {
+                R.id.second_sub1_fragment -> {
+                    Toast.makeText(requireContext(), "from sub 1", Toast.LENGTH_SHORT).show()
+                }
+                R.id.second_sub2_fragment -> {
+                    viewModel.onClickThirdInSub(binding.root)
+//                    Toast.makeText(requireContext(), "from sub 2", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
+
 }
