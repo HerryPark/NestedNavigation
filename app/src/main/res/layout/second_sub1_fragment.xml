@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/goto_second"
+        android:id="@+id/goto_second_sub2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show sub2 screen"

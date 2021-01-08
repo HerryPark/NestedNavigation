@@ -1,6 +1,6 @@
 package com.herry.nestednavigation.app.second
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.herry.nestednavigation.R
 import com.herry.nestednavigation.databinding.SecondFragmentBinding
-import com.herry.nestednavigation.ext.setNavNestedFragmentResultListener
+import com.herry.nestednavigation.ext.findNestedNavHostFragment
+import com.herry.nestednavigation.ext.setNestedNavHostFragmentResultListener
 
 class SecondFragment : Fragment() {
 
@@ -22,12 +25,12 @@ class SecondFragment : Fragment() {
 
     private lateinit var viewModel: SecondViewModel
 
+    private var subNavHostFragment: NavHostFragment? = null
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(SecondViewModel::class.java)
-        viewModel.showSub.observe(this, { visible ->
-            binding.secondSubNavHostFragment.visibility = if (visible) View.VISIBLE else View.GONE
-        })
     }
 
     override fun onCreateView(
@@ -37,31 +40,31 @@ class SecondFragment : Fragment() {
         if (_binding == null) {
             _binding = SecondFragmentBinding.inflate(inflater, container, false)
 
-            binding.gotoThird.setOnClickListener {
-                viewModel.onClickThird(it)
+            val subNavHost = findNestedNavHostFragment(binding.secondFragmentSubContainer.id)
+            if (subNavHost != null) {
+                subNavHostFragment = subNavHost
+                setNestedNavHostFragmentResultListener(subNavHost) { _, bundle ->
+                    onSubScreenResults(bundle)
+                }
             }
 
-            binding.showSubScreen.setOnClickListener {
-                viewModel.onClickShowSub(it)
+            binding.secondFragmentBottomShowSub3.setOnClickListener {
+                subNavHostFragment?.navController?.navigate(R.id.second_sub3_fragment)
             }
         }
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        setNavNestedFragmentResultListener((R.id.second_sub_nav).toString()) { _, bundle ->
-            Log.d("Herry", "from = ${bundle.getInt("from")}")
-            when(bundle.getInt("from")) {
-                R.id.second_sub1_fragment -> {
-                    Toast.makeText(requireContext(), "from sub 1", Toast.LENGTH_SHORT).show()
-                }
-                R.id.second_sub2_fragment -> {
-                    viewModel.onClickThirdInSub(binding.root)
-//                    Toast.makeText(requireContext(), "from sub 2", Toast.LENGTH_SHORT).show()
-                }
+    private fun onSubScreenResults(bundle: Bundle) {
+        Log.d("Herry", "from = ${bundle.getInt("from")}")
+        when (bundle.getInt("from")) {
+            R.id.second_sub1_fragment -> {
+                Toast.makeText(requireContext(), "from sub 1", Toast.LENGTH_SHORT).show()
+            }
+            R.id.second_sub2_fragment -> {
+                findNavController().navigate(R.id.action_second_fragment_to_third_fragment)
+                Toast.makeText(requireContext(), "from sub 2", Toast.LENGTH_SHORT).show()
             }
         }
     }

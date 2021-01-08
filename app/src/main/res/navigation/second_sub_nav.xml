@@ -9,13 +9,20 @@
     <fragment
         android:id="@+id/second_sub1_fragment"
         android:name="com.herry.nestednavigation.app.second.sub1.SecondSub1Fragment"
-        tools:layout="@layout/second_sub1_fragment">
-        <action
-            android:id="@+id/action_second_sub1_fragment_to_second_sub2_fragment"
-            app:destination="@id/second_sub2_fragment" />
-    </fragment>
+        tools:layout="@layout/second_sub1_fragment"/>
+
     <fragment
         android:id="@+id/second_sub2_fragment"
         android:name="com.herry.nestednavigation.app.second.sub2.SecondSub2Fragment"
         tools:layout="@layout/second_sub2_fragment" />
+
+    <fragment
+        android:id="@+id/second_sub3_fragment"
+        android:name="com.herry.nestednavigation.app.second.sub3.SecondSub3Fragment"
+        tools:layout="@layout/second_sub3_fragment">
+
+        <action android:id="@+id/second_sub3_to_sub1"
+            app:popUpTo="@id/second_sub1_fragment"
+            app:popUpToInclusive="false" />
+    </fragment>
 </navigation>

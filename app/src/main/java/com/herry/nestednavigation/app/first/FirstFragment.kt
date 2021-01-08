@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import com.herry.nestednavigation.R
 import com.herry.nestednavigation.databinding.FirstFragmentBinding
 
 class FirstFragment : Fragment() {
@@ -29,8 +31,8 @@ class FirstFragment : Fragment() {
         if (_binding == null) {
             _binding = FirstFragmentBinding.inflate(inflater, container, false)
 
-            binding.gotoSecond.setOnClickListener {
-                viewModel.onClickSecond(it)
+            binding.gotoSecond.setOnClickListener { view ->
+                view.findNavController().navigate(R.id.action_first_fragment_to_second_fragment)
             }
         }
 

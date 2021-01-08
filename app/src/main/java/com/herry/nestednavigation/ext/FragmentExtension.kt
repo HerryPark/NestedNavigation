@@ -1,16 +1,41 @@
 package com.herry.nestednavigation.ext
 
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import androidx.core.view.children
+import androidx.annotation.IdRes
+import androidx.annotation.NavigationRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 
-private fun findNavHostParentFragment(fragment: Fragment?): Fragment? {
+fun Fragment.getNavCurrentDestinationID(): Int = findNavController().currentDestination?.id ?: 0
+
+fun Fragment.addNestedNavHostFragment(@IdRes containerViewId: Int, navHostFragment: NavHostFragment?, tag: String? = null, listener: ((requestKey: String, bundle: Bundle) -> Unit)? = null): Boolean {
+    navHostFragment ?: return false
+    childFragmentManager.beginTransaction()
+            .replace(containerViewId, navHostFragment, tag)
+            .setPrimaryNavigationFragment(navHostFragment) // this is the equivalent to app:defaultNavHost="true"
+            .commit()
+
+    if (listener != null) {
+        childFragmentManager.setFragmentResultListener(navHostFragment.id.toString(), this, listener)
+    }
+
+    return true
+}
+
+fun Fragment.addNestedNavHostFragment(@IdRes containerViewId: Int, @NavigationRes graphResId: Int, startDestinationArgs: Bundle? = null, tag: String? = null, listener: ((requestKey: String, bundle: Bundle) -> Unit)? = null): NavHostFragment {
+    val navHostFragment = NavHostFragment.create(graphResId, startDestinationArgs)
+
+    addNestedNavHostFragment(containerViewId, navHostFragment, tag, listener)
+
+    return navHostFragment
+}
+
+fun Fragment.setNestedNavHostFragmentResultListener(navHostFragment: NavHostFragment, listener: ((requestKey: String, bundle: Bundle) -> Unit)) {
+    childFragmentManager.setFragmentResultListener(navHostFragment.id.toString(), this, listener)
+}
+
+private fun findParentNavHostFragment(fragment: Fragment?): NavHostFragment? {
     fragment ?: return null
 
     var parentFragment: Fragment? = fragment.parentFragment
@@ -25,44 +50,14 @@ private fun findNavHostParentFragment(fragment: Fragment?): Fragment? {
     return null
 }
 
-private fun hasNavHostFragment(view: View?, fragmentManager: FragmentManager): Boolean {
-    view ?: return false
+fun Fragment.setNestedNavFragmentResult(result: Bundle) {
+    val navHostFragment = findParentNavHostFragment(this)
 
-    if (view is ViewGroup) {
-        view.children.forEach {
-            if (hasNavHostFragment(it, fragmentManager)) {
-                return true
-            }
-        }
-    }
-
-    if (view is NavHostFragment) {
-        return true
-    }
-
-    if (view is FragmentContainerView) {
-        return fragmentManager.fragments.isNotEmpty()
-    }
-
-    return false
+    navHostFragment?.parentFragmentManager?.setFragmentResult(
+            navHostFragment.id.toString(), result
+    )
 }
 
-private fun hasNavHostFragment(fragment: Fragment?): Boolean {
-    fragment ?: return false
-
-    return hasNavHostFragment(fragment.view, fragment.childFragmentManager)
+fun Fragment.findNestedNavHostFragment(@IdRes id: Int): NavHostFragment? {
+    return childFragmentManager.findFragmentById(id) as? NavHostFragment
 }
-
-fun Fragment.setNavNestedFragmentResultListener(requestKey: String, listener: ((requestKey: String, bundle: Bundle) -> Unit)) {
-    val fragmentManager = if (hasNavHostFragment(this)) childFragmentManager else return
-    fragmentManager.setFragmentResultListener(requestKey, this, listener)
-}
-
-fun Fragment.setNavNestedFragmentResult(requestKey: String, result: Bundle) {
-    val fragmentManager = findNavHostParentFragment(this)?.parentFragment?.childFragmentManager ?: return
-    fragmentManager.setFragmentResult(requestKey, result)
-}
-
-fun Fragment.getNavGraphID(): Int = findNavController().graph.id
-
-fun Fragment.getNavCurrentDestinationID(): Int = findNavController().currentDestination?.id ?: 0

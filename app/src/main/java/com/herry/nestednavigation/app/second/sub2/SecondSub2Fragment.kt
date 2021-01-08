@@ -7,10 +7,11 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import com.herry.nestednavigation.R
 import com.herry.nestednavigation.databinding.SecondSub2FragmentBinding
 import com.herry.nestednavigation.ext.getNavCurrentDestinationID
-import com.herry.nestednavigation.ext.getNavGraphID
-import com.herry.nestednavigation.ext.setNavNestedFragmentResult
+import com.herry.nestednavigation.ext.setNestedNavFragmentResult
 
 
 class SecondSub2Fragment : Fragment() {
@@ -35,12 +36,14 @@ class SecondSub2Fragment : Fragment() {
             _binding = SecondSub2FragmentBinding.inflate(inflater, container, false)
 
             binding.gotoThirdInSub.setOnClickListener {
-                setNavNestedFragmentResult(
-                    (getNavGraphID()).toString(), bundleOf(
+                setNestedNavFragmentResult(bundleOf(
                         "from" to getNavCurrentDestinationID(),
                         "value" to "clicked"
-                    )
-                )
+                ))
+            }
+
+            binding.gotoSecondSub3.setOnClickListener { view ->
+                view.findNavController().navigate(R.id.second_sub3_fragment)
             }
         }
 

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/holo_orange_light"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/goto_second_sub3"
+        android:id="@+id/clear_top_to_sub1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show sub3 screen"
+        android:text="Clear top to second sub1 fragments"
         tools:ignore="HardcodedText" />
 
     <Button
-        android:id="@+id/goto_third_in_sub"
+        android:id="@+id/popup_to_sub1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show third from sub screen"
+        android:text="Popup to second sub1 fragments"
         tools:ignore="HardcodedText" />
 </LinearLayout>
